@@ -1,212 +1,255 @@
 # lendsynthetix
-AI-powered multi-agent credit underwriting engine — LangGraph debate pipeline with RAG, XGBoost risk scoring, and compliance veto for commercial loan evaluation.
-# LendSynthetix — The Loan War Room
+# LendSynthetix
 
-> AI-powered multi-agent credit underwriting engine — reduces commercial loan 
-> approval time from weeks to minutes with a full audit trail.
-
-Built for the **Engineering Hackathon Double Challenge 2026**  
-Track: **Agentic Workflows & Automated Underwriting (BFSI)**
+AI-Powered Loan Evaluation and Risk Analysis System
 
 ---
 
-## What It Does
+## Overview
 
-Commercial lending is bottlenecked by three teams with conflicting priorities:
+LendSynthetix is an intelligent loan evaluation platform designed to assist financial decision-making through automated risk assessment and structured analysis. The system leverages rule-based logic and AI-driven insights to evaluate loan applications, identify potential risks, and provide clear approval recommendations.
 
-| Team | Goal |
-|---|---|
-| Sales | Close the deal |
-| Risk/Underwriting | Protect the bank's capital |
-| Compliance | Ensure zero regulatory violations |
-
-LendSynthetix creates a **Digital War Room** where AI agents simulate each role, 
-debate the loan from opposing perspectives, and autonomously arrive at a structured 
-credit decision — with a full JSON audit trail.
+The platform is built with a scalable backend architecture and is designed to simulate real-world financial decision systems used in lending and credit analysis.
 
 ---
 
-##  Pipeline Overview
-```
-PDF Upload → LlamaIndex Ingestion → Qdrant Vector DB
-    ↓
-RAG Context Retrieval (top-5 chunks)
-    ↓
-Financial Analyst Agent (DSCR, EBITDA, D/EBITDA)
-    ↓
-Sales Agent → Risk Agent → Sales Rebuttal Agent
-    ↓
-Compliance Agent (KYC / AML / VETO POWER)
-    ↓
-XGBoost Risk Scoring + Stress Testing
-    ↓
-Moderator Agent → APPROVE / REJECT / CONDITIONAL
-    ↓
-war_room_output.json → Dashboard UI
-```
+## Problem Statement
 
----
+Traditional loan approval processes are often:
 
-## The 6 Agents
+* Time-consuming
+* Prone to human bias
+* Inconsistent in risk evaluation
 
-| Agent | Role | Mandate |
-|---|---|---|
-| Financial Analyst | Extracts metrics from PDF | DSCR, EBITDA margin, revenue growth, debt trend |
-| Relationship Manager | Sales Agent | Argues for approval with PDF-grounded evidence |
-| Credit Underwriter | Risk Agent | Flags leverage, DSCR, cash flow volatility |
-| Sales Rebuttal | Counter-argument | Point-by-point rebuttal of Risk objections |
-| Compliance Officer | Auditor | KYC, AML, sanctions — has **VETO power** |
-| Moderator | Committee Chair | Synthesizes all memos into final verdict |
-
----
-
-## 🛠 Tech Stack
-
-| Layer | Technology |
-|---|---|
-| Agent Orchestration | LangGraph |
-| LLM Inference | Groq API (LLaMA 3.1 8B Instant) |
-| RAG Pipeline | LlamaIndex Core |
-| Vector Database | Qdrant (local file storage) |
-| Embeddings | BAAI/bge-small-en-v1.5 (HuggingFace, local) |
-| PDF Extraction | pdfplumber |
-| Risk Scoring | XGBoost + Scikit-learn |
-| Backend | Python + Flask |
-| Frontend | HTML + Tailwind CSS + Vanilla JS |
-| Config | Pydantic v2 + python-dotenv |
-
----
-
-## Getting Started
-
-### Prerequisites
-- Python 3.11
-- A free [Groq API key](https://console.groq.com)
-
-### Setup
-```bash
-# 1. Clone the repo
-git clone https://github.com/yourusername/LendSynthetix.git
-cd LendSynthetix/src
-
-# 2. Create virtual environment
-py -3.11 -m venv venv
-
-# Windows
-venv\Scripts\activate
-
-# Linux / Mac
-source venv/bin/activate
-
-# 3. Install dependencies
-pip install -r requirements.txt
-
-# 4. Add your Groq API key to .env
-# Open .env and set: LLM_API_KEY=your_groq_key_here
-```
-
-### Ingest a Loan PDF
-```bash
-python main.py --pdf loan_grade_a_vertex_technologies.pdf --collection loan_grade_a
-python main.py --pdf loan_grade_b_crestline_retail.pdf --collection loan_grade_b
-```
-
-### Run the War Room
-```bash
-python war_room_test.py --collection loan_grade_a
-# or
-python war_room_test.py --collection loan_grade_b
-```
-
-### View the Dashboard
-```bash
-python -m http.server 8000
-# Open: http://localhost:8000/war_room_ui.html
-```
-
----
-
-## Project Structure
-```
-src/
-├── main.py                  # PDF ingestion entry point
-├── war_room_test.py         # War room pipeline runner
-├── war_room_graph.py        # LangGraph pipeline (10 nodes)
-├── war_room_ui.html         # Frontend dashboard
-├── war_room_output.json     # Pipeline output (auto-generated)
-├── .env                     # Environment variables
-├── requirements.txt         # Dependencies
-├── credit_risk_model.pkl    # Pre-trained XGBoost model
-├── agents/
-│   ├── financial_analyst.py
-│   ├── sales_agent.py
-│   ├── risk_agent.py
-│   ├── sales_rebuttal.py
-│   ├── compliance_agent.py
-│   └── moderator.py
-├── pipeline.py
-├── parser.py
-├── chunker.py
-├── embedder.py
-├── qdrant_store.py
-├── query_engine.py
-├── risk_scoring.py
-├── stress_testing.py
-└── case_memory.py
-```
-
----
-
-## Sample Output
-```json
-{
-  "final_decision": {
-    "final_recommendation": "CONDITIONAL_APPROVAL",
-    "reasoning": "DSCR of 1.52x is adequate but leaves thin headroom...",
-    "conditions": [
-      "Personal guarantees from promoters required",
-      "Debt-to-EBITDA covenant must not exceed 3.8x",
-      "Quarterly financial reporting to the bank"
-    ]
-  },
-  "risk_score": {
-    "risk_score": 72,
-    "risk_level": "MODERATE",
-    "predicted_grade": "B"
-  }
-}
-```
+LendSynthetix addresses these challenges by introducing a structured, transparent, and automated decision-making pipeline.
 
 ---
 
 ## Key Features
 
-- **Adversarial multi-agent debate** — agents argue against each other, not alongside
-- **Sales Rebuttal agent** — unique point-by-point counter to every Risk objection
-- **Compliance VETO power** — cannot approve non-compliant deals regardless of consensus
-- **Case memory** — learns from past decisions via Qdrant semantic retrieval
-- **Stress testing** — Revenue shock, rate shock, and recession scenario via XGBoost
-- **Per-collection isolation** — each PDF gets its own Qdrant collection, zero data bleed
-- **100% local** — Qdrant runs on disk, embeddings run locally, no paid cloud DB
+### Loan Evaluation Engine
+
+* Automated assessment of loan applications
+* Multi-factor analysis (income, credit profile, risk indicators)
+* Decision outputs: APPROVE, REJECT, or CONDITIONAL APPROVAL
 
 ---
 
-## Common Errors
+### Risk Analysis System
 
-| Error | Fix |
-|---|---|
-| `ModuleNotFoundError: xgboost` | `pip install xgboost` |
-| `ModuleNotFoundError: llama_index.embeddings.fastembed` | `pip install llama-index-embeddings-fastembed` |
-| `'docker' is not recognized` | Docker is NOT needed — Qdrant runs locally via `./qdrant_db` |
-| `war_room_output.json not found` | Run `war_room_test.py` first before opening the dashboard |
-| Groq 429 rate limit | Wait 30-60 seconds — pipeline has automatic retry built in |
+* Identifies key financial risks in applications
+* Highlights critical decision factors
+* Generates structured summaries for each evaluation
+
+---
+
+### AI-Driven Decision Support
+
+* Simulates intelligent reasoning for loan approval
+* Produces explainable outputs with justification
+* Enhances consistency in decision-making
+
+---
+
+### Structured Output
+
+* JSON-based responses for easy integration
+* Clear breakdown of risks and opportunities
+* Human-readable summaries for interpretation
+
+---
+
+### Backend Architecture
+
+* RESTful API using FastAPI
+* Modular and scalable codebase
+* Input validation using Pydantic
+* CORS-enabled for frontend integration
+
+---
+
+## System Architecture
+
+```id="b3z3sd"
+Client (Frontend / CLI)
+        │
+        ▼
+FastAPI Backend (API Layer)
+        │
+        ▼
+Loan Evaluation Engine
+        │
+        ▼
+Risk Analysis + Decision Logic
+        │
+        ▼
+Structured Response (JSON + Summary)
+```
+
+---
+
+## Tech Stack
+
+### Backend
+
+* Python
+* FastAPI
+* Pydantic
+
+### Frontend
+
+* (Specify: React / CLI / other interface)
+
+### Tools
+
+* Git and GitHub
+* VS Code
+
+---
+
+## Project Structure
+
+```id="c3r6kt"
+lendsynthetix/
+│
+├── backend/
+│   ├── app/
+│   │   ├── routes/        # API endpoints
+│   │   ├── models/        # Data schemas
+│   │   ├── services/      # Business logic
+│   │   └── core/          # Configurations
+│   └── main.py
+│
+├── frontend/              # (if applicable)
+│   ├── src/
+│   └── public/
+│
+├── tests/                 # Unit and integration tests
+├── .env.example
+├── requirements.txt
+└── README.md
+```
+
+---
+
+## Installation and Setup
+
+### 1. Clone the Repository
+
+```id="y4fh3l"
+git clone https://github.com/your-username/lendsynthetix.git
+cd lendsynthetix
+```
+
+---
+
+### 2. Backend Setup
+
+```id="v6h0d7"
+cd backend
+python -m venv venv
+venv\Scripts\activate
+
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
+
+Backend will run at:
+http://127.0.0.1:8000
+
+---
+
+## API Documentation
+
+FastAPI provides interactive API documentation:
+
+* Swagger UI: http://127.0.0.1:8000/docs
+* ReDoc: http://127.0.0.1:8000/redoc
+
+---
+
+## Example API Usage
+
+### Endpoint
+
+```id="2nhp4u"
+POST /evaluate-loan
+```
+
+### Request
+
+```id="q0qzj4"
+{
+  "income": 50000,
+  "credit_score": 720,
+  "loan_amount": 200000
+}
+```
+
+### Response
+
+```id="8g9h8c"
+{
+  "decision": "APPROVE",
+  "risk_score": 23,
+  "summary": "Low financial risk with stable income profile."
+}
+```
+
+---
+
+## Demo
+
+Demo Video:
+https://drive.google.com/file/d/1FNpomP_HCHA_JJ36B7Qy4XE4gEGnhvPL/view
+
+---
+
+## Future Enhancements
+
+* Integration with real-world financial datasets
+* Machine learning-based risk prediction models
+* Multi-agent decision systems (risk, fraud, compliance)
+* Advanced scoring algorithms
+* Frontend dashboard for visualization
+* Deployment on cloud platforms
+
+---
+
+## Security Considerations
+
+* Input validation using Pydantic
+* Structured error handling
+* Prepared for API authentication integration
+* Scalable design for secure deployment
+
+---
+
+## Contribution Guidelines
+
+1. Fork the repository
+2. Create a new branch
+3. Commit your changes
+4. Push to your fork
+5. Submit a pull request
 
 ---
 
 ## License
 
-MIT License — see LICENSE file for details.
+This project is licensed under the MIT License.
 
 ---
 
-*Engineering Hackathon Double Challenge 2026 | Project 2 | BFSI — Agentic Workflows & Automated Underwriting*
+## Author
+
+Abhishek Bijjargi
+
+---
+
+## Notes
+
+* Ensure all dependencies are installed before running the project
+* Configure environment variables where necessary
+* Replace placeholder values with actual configuration
+
