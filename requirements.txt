@@ -1,0 +1,43 @@
+# ── LlamaIndex (RAG pipeline) ─────────────────────────────────────────────────
+llama-index-core
+llama-index-readers-file
+llama-index-vector-stores-qdrant
+llama-index-embeddings-huggingface
+llama-index-embeddings-fastembed
+
+# ── Vector database ───────────────────────────────────────────────────────────
+qdrant-client
+
+# ── Embeddings ────────────────────────────────────────────────────────────────
+sentence-transformers
+
+# ── Document parsing ──────────────────────────────────────────────────────────
+pdfplumber
+
+# ── AI / Agent workflow ───────────────────────────────────────────────────────
+langgraph
+langchain-core
+langchain-openai
+
+# ── LLM HTTP client ───────────────────────────────────────────────────────────
+httpx
+openai
+
+# ── ML / Risk scoring ─────────────────────────────────────────────────────────
+pandas
+numpy
+scikit-learn
+xgboost
+joblib
+
+# ── Backend API ───────────────────────────────────────────────────────────────
+fastapi
+uvicorn
+
+# ── Event orchestration (optional) ───────────────────────────────────────────
+inngest
+
+# ── Environment & config ──────────────────────────────────────────────────────
+python-dotenv
+pydantic>=2
+pydantic-settings

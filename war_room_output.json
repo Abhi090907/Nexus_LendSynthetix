@@ -1,0 +1,194 @@
+{
+  "question": "Should we approve this commercial loan? Summarize the key risks and opportunities and recommend APPROVE, REJECT, or CONDITIONAL APPROVAL.",
+  "financial_analysis": {
+    "financial_summary": "Crestline Retail Pvt. Ltd. is a moderate-risk borrower with a history of revenue volatility, thin margins, and elevated leverage. Despite positive revenue recovery and e-commerce growth, the company's financial position and trends raise concerns.",
+    "metrics": {
+      "revenue_growth": "21% YoY",
+      "ebitda_margin": "14% or N/A",
+      "net_profit_margin": "6.1% or N/A",
+      "debt_trend": "Increasing from $4,800,000 to $5,300,000",
+      "dscr": "1.18 or N/A",
+      "debt_to_ebitda": "3.73x or N/A"
+    },
+    "financial_risk_flags": [
+      "Consumer discretionary exposure",
+      "Thin margins",
+      "Leverage",
+      "Single delayed repayment",
+      "Competitive landscape"
+    ]
+  },
+  "sales_memo": {
+    "recommendation": "CONDITIONAL",
+    "summary": "We recommend conditional approval for the commercial loan to Crestline Retail Pvt. Ltd. The company has demonstrated revenue recovery and e-commerce growth, but faces risks such as high leverage, thin margins, and cash flow volatility. The estimated Debt Service Coverage Ratio (DSCR) of 1.18 is below the industry average, and the Debt-to-EBITDA ratio of 3.73x is above the preferred threshold.",
+    "revenue_growth_highlights": [
+      "Revenue recovered in FY2024 following a 9% contraction in FY2023 due to post-pandemic demand normalization.",
+      "E-commerce now contributes 22% of revenue, up from 11% in FY2022."
+    ],
+    "new_contracts_and_opportunities": [
+      "Secured a 5-year SaaS contract worth $12M with a US-based insurance conglomerate in Q3 FY2024."
+    ],
+    "market_reputation": "Crestline Retail Pvt. Ltd. is a mid-sized omnichannel retail operator with outlets across Tier-1 and Tier-2 cities in Maharashtra and Gujarat, India.",
+    "risks_acknowledged": [
+      "Consumer discretionary exposure \u2014 Revenue is sensitive to economic slowdowns and inflation-driven spending cuts.",
+      "Thin margins \u2014 EBITDA margin of ~14% leaves limited buffer against cost inflation or revenue shocks."
+    ],
+    "evidence": [
+      "Revenue recovered in FY2024 following a 9% contraction in FY2023 due to post-pandemic demand normalization.",
+      "E-commerce now contributes 22% of revenue, up from 11% in FY2022.",
+      "Debt-to-EBITDA stands at 3.73x, slightly above the 3.5x preferred threshold.",
+      "Debt Service Coverage Ratio (DSCR) is estimated at 1.18 based on FY2024 operating cash flows \u2014 adequate but leaving limited headroom."
+    ]
+  },
+  "risk_memo": {
+    "recommendation": "REJECT",
+    "summary": "We recommend rejecting the commercial loan to Crestline Retail Pvt. Ltd. due to high leverage, thin margins, and cash flow volatility, which pose significant risks to the bank's capital. The estimated Debt Service Coverage Ratio (DSCR) of 1.18 is below the industry average, and the Debt-to-EBITDA ratio of 3.73x is above the preferred threshold.",
+    "dscr_analysis": "The estimated Debt Service Coverage Ratio (DSCR) of 1.18 is below the industry average, indicating that the company's cash flows may not be sufficient to cover its debt obligations.",
+    "leverage_analysis": "The Debt-to-EBITDA ratio of 3.73x is above the preferred threshold of 3.5x, indicating high leverage and a high risk of debt distress.",
+    "cashflow_volatility_concerns": [
+      "Revenue is sensitive to economic slowdowns and inflation-driven spending cuts.",
+      "The company has experienced a 9% contraction in revenue in FY2023 due to post-pandemic demand normalization."
+    ],
+    "collateral_quality": "The collateral provided, warehouse property and inventory pledge, may not be sufficient to cover the loan amount in case of default.",
+    "other_risks": [
+      "Thin margins \u2014 EBITDA margin of ~14% leaves limited buffer against cost inflation or revenue shocks.",
+      "Single delayed repayment \u2014 Although regularized, reflects cash flow management risk."
+    ],
+    "evidence": [
+      "Debt Service Coverage Ratio (DSCR) is estimated at 1.18 based on FY2024 operating cash flows \u2014 adequate but leaving limited headroom.",
+      "Debt-to-EBITDA stands at 3.73x, slightly above the 3.5x preferred threshold.",
+      "Revenue recovered in FY2024 following a 9% contraction in FY2023 due to post-pandemic demand normalization.",
+      "Thin margins \u2014 EBITDA margin of ~14% leaves limited buffer against cost inflation or revenue shocks."
+    ]
+  },
+  "sales_rebuttal": {
+    "summary": "We acknowledge the Risk team's concerns but believe that conditional approval is a more balanced approach.",
+    "response_to_risk": "While the estimated Debt Service Coverage Ratio (DSCR) of 1.18 is below the industry average, it is still adequate and leaves limited headroom. The Debt-to-EBITDA ratio of 3.73x is above the preferred threshold, but the company has demonstrated revenue recovery and e-commerce growth, which mitigates some of the risks. Furthermore, the collateral provided, warehouse property and inventory pledge, may not be sufficient to cover the loan amount in case of default, but the company's market reputation and recent business performance suggest that it is a viable borrower.",
+    "recommendation": "CONDITIONAL",
+    "evidence": [
+      "Revenue recovered in FY2024 following a 9% contraction in FY2023 due to post-pandemic demand normalization.",
+      "E-commerce now contributes 22% of revenue, up from 11% in FY2022.",
+      "Debt Service Coverage Ratio (DSCR) is estimated at 1.18 based on FY2024 operating cash flows \u2014 adequate but leaving limited headroom.",
+      "Debt-to-EBITDA stands at 3.73x, slightly above the 3.5x preferred threshold.",
+      "Crestline Retail Pvt. Ltd. is a mid-sized omnichannel retail operator with outlets across Tier-1 and Tier-2 cities in Maharashtra and Gujarat, India.",
+      "The company has secured a 5-year SaaS contract worth $12M with a US-based insurance conglomerate in Q3 FY2024."
+    ]
+  },
+  "compliance_memo": {
+    "recommendation": "REJECT",
+    "summary": "We recommend rejecting the commercial loan to Crestline Retail Pvt. Ltd. due to high leverage, thin margins, and cash flow volatility, which pose significant risks to the bank's capital. The estimated Debt Service Coverage Ratio (DSCR) of 1.18 is below the industry average, and the Debt-to-EBITDA ratio of 3.73x is above the preferred threshold.",
+    "blocking_issues": [
+      "High leverage, thin margins, and cash flow volatility pose significant risks to the bank's capital."
+    ],
+    "kyc_notes": "KYC documentation for Crestline Retail Pvt. Ltd. and its directors has been submitted. No sanctions or AML watchlist matches were identified during preliminary screening.",
+    "aml_sanctions_notes": "No sanctions or AML watchlist matches were identified during preliminary screening.",
+    "documentation_completeness": [
+      "Loan Request Summary",
+      "Loan Amount Requested $3,500,000",
+      "Loan Purpose Warehouse Expansion & Working Capital",
+      "Loan Term 5 Years",
+      "Interest Structure Floating (SOFR + 4.5%)",
+      "Collateral Warehouse Property + Inventory Pledge"
+    ],
+    "non_blocking_conditions": [
+      "Personal guarantees from promoters",
+      "Covenant on Debt-to-EBITDA not exceeding 4.0x",
+      "Quarterly financial reporting"
+    ],
+    "evidence": [
+      "Debt Service Coverage Ratio (DSCR) is estimated at 1.18 based on FY2024 operating cash flows \u2014 adequate but leaving limited headroom.",
+      "Debt-to-EBITDA stands at 3.73x, slightly above the 3.5x preferred threshold.",
+      "Revenue recovered in FY2024 following a 9% contraction in FY2023 due to post-pandemic demand normalization.",
+      "Thin margins \u2014 EBITDA margin of ~14% leaves limited buffer against cost inflation or revenue shocks.",
+      "Single delayed repayment \u2014 Although regularized, reflects cash flow management risk."
+    ]
+  },
+  "risk_score": {
+    "risk_score": 0,
+    "risk_level": "HIGH",
+    "predicted_grade": "B",
+    "key_drivers": [
+      "ML model predicted loan grade: B",
+      "Compliance blocking issues (-50)",
+      "DSCR 1.18 < 1.25 (-20)",
+      "Revenue growth positive (+10)",
+      "Debt increasing (-10)"
+    ]
+  },
+  "stress_test_results": {
+    "Base Case": {
+      "risk_score": 20,
+      "risk_level": "HIGH",
+      "predicted_grade": "B",
+      "key_drivers": [
+        "ML model predicted loan grade: B",
+        "Compliance blocking issues (-50)",
+        "DSCR 1.6 > 1.5 (+20)",
+        "Revenue growth positive (+10)",
+        "Debt increasing (-10)"
+      ]
+    },
+    "Revenue -20%": {
+      "risk_score": 10,
+      "risk_level": "HIGH",
+      "predicted_grade": "B",
+      "key_drivers": [
+        "ML model predicted loan grade: B",
+        "Compliance blocking issues (-50)",
+        "DSCR 1.6 > 1.5 (+20)",
+        "Debt increasing (-10)"
+      ]
+    },
+    "Revenue -40%": {
+      "risk_score": 10,
+      "risk_level": "HIGH",
+      "predicted_grade": "B",
+      "key_drivers": [
+        "ML model predicted loan grade: B",
+        "Compliance blocking issues (-50)",
+        "DSCR 1.6 > 1.5 (+20)",
+        "Debt increasing (-10)"
+      ]
+    },
+    "Interest Rate +3%": {
+      "risk_score": 20,
+      "risk_level": "HIGH",
+      "predicted_grade": "B",
+      "key_drivers": [
+        "ML model predicted loan grade: B",
+        "Compliance blocking issues (-50)",
+        "DSCR 1.6 > 1.5 (+20)",
+        "Revenue growth positive (+10)",
+        "Debt increasing (-10)"
+      ]
+    },
+    "Income -30%": {
+      "risk_score": 20,
+      "risk_level": "HIGH",
+      "predicted_grade": "B",
+      "key_drivers": [
+        "ML model predicted loan grade: B",
+        "Compliance blocking issues (-50)",
+        "DSCR 1.6 > 1.5 (+20)",
+        "Revenue growth positive (+10)",
+        "Debt increasing (-10)"
+      ]
+    },
+    "Recession Scenario": {
+      "risk_score": 10,
+      "risk_level": "HIGH",
+      "predicted_grade": "B",
+      "key_drivers": [
+        "ML model predicted loan grade: B",
+        "Compliance blocking issues (-50)",
+        "DSCR 1.6 > 1.5 (+20)",
+        "Debt increasing (-10)"
+      ]
+    }
+  },
+  "final_decision": {
+    "final_recommendation": "REJECT",
+    "reasoning": "Compliance veto: High leverage, thin margins, and cash flow volatility pose significant risks to the bank's capital.",
+    "conditions": []
+  }
+}
