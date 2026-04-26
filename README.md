@@ -87,27 +87,3 @@ Signed reports include:
 
 If report JSON is modified, hash/signature verification fails.
 
-## GitHub Push (First Time)
-
-```bash
-# From project root
-git init
-git add .
-git commit -m "Initial commit: LendSynthetix full stack with signed reports"
-git branch -M main
-git remote add origin https://github.com/<your-username>/<your-repo>.git
-git push -u origin main
-```
-
-If remote already exists:
-
-```bash
-git remote set-url origin https://github.com/<your-username>/<your-repo>.git
-git push -u origin main
-```
-
-## Security Notes
-
-- Never commit `.env` files or API keys.
-- Rotate exposed keys immediately if accidentally leaked.
-- Use a strong `REPORT_SIGNING_KEY` in production.
