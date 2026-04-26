@@ -1,1 +1,70 @@
- 
+
+# =========================
+# OS / editor artifacts
+# =========================
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# =========================
+# Node / Next.js frontend
+# =========================
+node_modules/
+.next/
+out/
+build/
+coverage/
+*.tsbuildinfo
+next-env.d.ts
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# =========================
+# Python backend / ML
+# =========================
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.ipynb_checkpoints/
+src/venv/
+.venv/
+venv/
+env/
+
+# =========================
+# Runtime data / generated outputs
+# =========================
+qdrant_db/
+src/qdrant_db/
+src/temp_uploads/
+src/outputs/
+src/audit_ledger.db
+src/*.sqlite
+src/*.db
+public/dashboard/war_room_output.json
+
+# =========================
+# Secrets / local config
+# =========================
+.env
+.env.*
+!.env.example
+src/.env
+src/.env.*
+!.env*.example
+.vercel/
+*.pem
+*.key
+
+# =========================
+# Cursor / agent cache
+# =========================
+.agent/
+

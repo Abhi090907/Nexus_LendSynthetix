@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LendSynthetix Unified Dashboard</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Alike&family=Archivo+Black&family=EB+Garamond:ital,wght@0,400..800;1,400..800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans antialiased h-screen flex overflow-hidden transition-colors duration-300">
+
+  <!-- Sidebar -->
+  <aside class="w-64 bg-slate-900 text-white flex flex-col h-full shadow-lg z-10 relative">
+    <div class="p-6 border-b border-slate-700">
+      <h1 class="text-xl font-bold tracking-tight">LendSynthetix</h1>
+      <p class="text-xs text-slate-400 mt-1">Unified Loan Platform</p>
+    </div>
+    
+    <nav class="flex-1 overflow-y-auto py-4">
+      <ul class="space-y-1">
+        <li>
+          <button data-target="dashboard" class="nav-btn w-full text-left px-6 py-3 text-sm font-medium bg-slate-800 border-l-4 border-blue-500 text-blue-400 transition-colors focus:outline-none">
+            <i class="fa-solid fa-chart-line w-5"></i> Dashboard
+          </button>
+        </li>
+        <li>
+          <button data-target="upload" class="nav-btn w-full text-left px-6 py-3 text-sm font-medium hover:bg-slate-800 border-l-4 border-transparent text-slate-300 hover:text-white transition-colors focus:outline-none">
+            <i class="fa-solid fa-file-arrow-up w-5"></i> Upload Documents
+          </button>
+        </li>
+        <li>
+          <button data-target="analysis" class="nav-btn w-full text-left px-6 py-3 text-sm font-medium hover:bg-slate-800 border-l-4 border-transparent text-slate-300 hover:text-white transition-colors focus:outline-none">
+            <i class="fa-solid fa-chart-pie w-5"></i> Loan Analysis
+          </button>
+        </li>
+        <li>
+          <button data-target="explain" class="nav-btn w-full text-left px-6 py-3 text-sm font-medium hover:bg-slate-800 border-l-4 border-transparent text-slate-300 hover:text-white transition-colors focus:outline-none">
+            <i class="fa-solid fa-sitemap w-5"></i> Explainability
+          </button>
+        </li>
+        <li>
+          <button data-target="war-room" class="nav-btn w-full text-left px-6 py-3 text-sm font-medium hover:bg-slate-800 border-l-4 border-transparent text-slate-300 hover:text-white transition-colors focus:outline-none">
+            <i class="fa-solid fa-people-group w-5"></i> War Room
+          </button>
+        </li>
+        <li>
+          <button data-target="agent" class="nav-btn w-full text-left px-6 py-3 text-sm font-medium hover:bg-slate-800 border-l-4 border-transparent text-slate-300 hover:text-white transition-colors focus:outline-none">
+            <i class="fa-solid fa-robot w-5"></i> Ask Agent
+          </button>
+        </li>
+      </ul>
+    </nav>
+    
+    <div class="p-4 border-t border-slate-700">
+      <div class="flex items-center text-xs text-slate-400">
+        <span class="w-2 h-2 rounded-full bg-green-500 mr-2"></span> System Online
+      </div>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <main class="flex-1 flex flex-col h-full overflow-hidden relative bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+    
+    <!-- Top Header -->
+    <header class="bg-white dark:bg-gray-800 shadow-sm border-b border-gray-200 dark:border-gray-700 py-4 px-8 flex justify-between items-center z-10 transition-colors duration-300">
+      <h2 id="page-title" class="text-xl font-semibold text-gray-800 dark:text-white">Dashboard Overview</h2>
+      <div class="flex items-center space-x-4">
+        <button id="theme-toggle" class="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 dark:text-gray-400 transition-colors">
+          <i class="fa-solid fa-moon dark:hidden"></i>
+          <i class="fa-solid fa-sun hidden dark:block"></i>
+        </button>
+      </div>
+    </header>
+
+    <!-- Scrollable Content -->
+    <div class="flex-1 overflow-y-auto p-8 relative">
+      
+      <!-- 1. Dashboard Section -->
+      <section id="dashboard" class="section-content active">
+        <div class="mb-8">
+          <h3 class="text-lg font-medium text-gray-700 dark:text-gray-200 mb-4">Summary Statistics</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="stat-card">
+              <div class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Total Processed</div>
+              <div class="text-3xl font-bold text-gray-800 dark:text-white">142</div>
+            </div>
+            <div class="stat-card flex items-center justify-between">
+              <div>
+                <div class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Approved</div>
+                <div class="text-3xl font-bold text-green-600">89</div>
+              </div>
+              <div class="w-12 h-12 bg-green-50 dark:bg-green-900/30 rounded-full flex items-center justify-center text-green-500">
+                <i class="fa-solid fa-check text-xl"></i>
+              </div>
+            </div>
+            <div class="stat-card flex items-center justify-between">
+              <div>
+                <div class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Rejected</div>
+                <div class="text-3xl font-bold text-red-600">41</div>
+              </div>
+              <div class="w-12 h-12 bg-red-50 dark:bg-red-900/30 rounded-full flex items-center justify-center text-red-500">
+                <i class="fa-solid fa-xmark text-xl"></i>
+              </div>
+            </div>
+            <div class="stat-card flex items-center justify-between">
+              <div>
+                <div class="text-sm font-medium text-gray-500 dark:text-gray-400 mb-1">Avg Risk Score</div>
+                <div class="text-3xl font-bold text-blue-600">54</div>
+              </div>
+              <div class="w-12 h-12 bg-blue-50 dark:bg-blue-900/30 rounded-full flex items-center justify-center text-blue-500">
+                <i class="fa-solid fa-chart-bar text-xl"></i>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="panel mb-8">
+          <h3 class="text-lg font-medium text-gray-700 dark:text-gray-200 mb-4">System Status</h3>
+          <p class="text-sm text-gray-500 dark:text-gray-400">FastAPI backend is running. Qdrant vector database is connected. Models are loaded in memory.</p>
+        </div>
+        
+        <!-- Live Market Intelligence on Main Dashboard -->
+        <div>
+          <h3 class="text-lg font-medium text-gray-700 dark:text-gray-200 mb-4">Live Market Intelligence</h3>
+          <div id="dashboard-mi-root" class="min-h-[200px]">
+             <div class="panel p-5 text-gray-500 text-sm text-center">Loading market data...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. Upload Section -->
+      <section id="upload" class="section-content">
+        <div class="max-w-3xl mx-auto">
+          <div class="panel p-8">
+            <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-2">Upload Loan Documents</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">PDF files will be extracted, chunked, and embedded seamlessly.</p>
+            
+            <form id="upload-form" class="space-y-6">
+              <div class="flex items-center justify-center w-full">
+                <label for="pdf-files" class="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-xl cursor-pointer bg-gray-50 dark:bg-gray-800 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
+                  <div class="flex flex-col items-center justify-center pt-5 pb-6">
+                    <i class="fa-solid fa-cloud-arrow-up text-4xl text-gray-400 mb-3"></i>
+                    <p class="mb-2 text-sm text-gray-500 dark:text-gray-400"><span class="font-semibold">Click to select files</span> or drag and drop</p>
+                    <p class="text-xs text-gray-500 dark:text-gray-400">PDFs only (max 10MB each)</p>
+                  </div>
+                  <input id="pdf-files" type="file" class="hidden" multiple accept="application/pdf" />
+                </label>
+              </div>
+              
+              <div id="file-list" class="hidden">
+                <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Selected Files</h4>
+                <ul id="file-names" class="text-sm text-gray-600 dark:text-gray-400 list-disc pl-5 space-y-1"></ul>
+              </div>
+
+              <div id="upload-status" class="hidden p-4 rounded-lg text-sm"></div>
+
+              <button type="submit" id="upload-btn" class="w-full text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-5 py-3 transition-colors shadow-sm disabled:opacity-50">
+                Process Documents
+              </button>
+            </form>
+          </div>
+        </div>
+      </section>
+
+      <!-- 3. Risk Analysis Section -->
+      <section id="analysis" class="section-content">
+        <div class="max-w-4xl mx-auto">
+          <div class="panel p-8">
+            <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-2">Run Risk Analysis</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">Enter applicant properties manually or paste JSON.</p>
+            
+            <form id="analysis-form">
+              <div class="mb-4">
+                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Applicant Data (JSON Format)</label>
+                <textarea id="json-input" rows="12" class="block p-3 w-full text-sm bg-gray-50 dark:bg-gray-800 dark:text-gray-200 rounded-lg border border-gray-300 dark:border-gray-600 focus:ring-blue-500 focus:border-blue-500 font-mono shadow-inner outline-none">{
+  "person_age": 35,
+  "person_income": 60000,
+  "person_emp_length": 7,
+  "loan_amnt": 15000,
+  "loan_int_rate": 12.5,
+  "loan_percent_income": 0.25,
+  "cb_person_default_on_file": "N",
+  "cb_person_cred_hist_length": 8
+}</textarea>
+              </div>
+              <div id="analysis-error" class="hidden mb-4 p-3 bg-red-50 dark:bg-red-900/30 text-red-600 dark:text-red-400 text-sm rounded border border-red-100 dark:border-red-800"></div>
+              <button type="submit" id="analyze-btn" class="text-white bg-indigo-600 hover:bg-indigo-700 font-medium rounded-lg text-sm px-6 py-2.5 shadow-sm transition-colors disabled:opacity-50">
+                Analyze Risk
+              </button>
+            </form>
+            
+            <div id="analysis-results" class="hidden mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
+              <h4 class="text-base font-medium text-gray-800 dark:text-white mb-4">Results</h4>
+              <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="stat-card text-center">
+                  <div class="text-xs text-gray-500 uppercase tracking-widest mb-1">Score</div>
+                  <div id="res-score" class="text-3xl font-bold text-gray-800 dark:text-white"></div>
+                </div>
+                <div class="stat-card text-center">
+                  <div class="text-xs text-gray-500 uppercase tracking-widest mb-1">Level</div>
+                  <div id="res-level" class="text-3xl font-bold"></div>
+                </div>
+                <div class="stat-card text-center">
+                  <div class="text-xs text-gray-500 uppercase tracking-widest mb-1">Grade</div>
+                  <div id="res-grade" class="text-3xl font-bold text-gray-800 dark:text-white"></div>
+                </div>
+              </div>
+              <div class="mt-6 flex justify-end">
+                <button id="view-explain-btn" class="text-sm text-indigo-600 dark:text-indigo-400 hover:text-indigo-800 font-medium flex items-center">
+                  View Explainability <i class="fa-solid fa-arrow-right ml-1"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 4. Explain Section -->
+      <section id="explain" class="section-content">
+        <div class="max-w-5xl mx-auto">
+          <div class="panel p-8">
+            <h3 class="text-lg font-medium text-gray-800 dark:text-white mb-2">Loan Explainability</h3>
+            <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">SHAP-based feature importance extracted from the latest analysis.</p>
+            
+            <div id="explain-empty" class="text-center py-16 bg-gray-50 dark:bg-gray-800 rounded-xl border border-dashed border-gray-300 dark:border-gray-600">
+              <i class="fa-solid fa-chart-bar text-4xl text-gray-400 mb-3"></i>
+              <p class="text-gray-500 dark:text-gray-400 text-sm">No analysis data found.</p>
+              <button onclick="document.querySelector('[data-target=analysis]').click()" class="mt-4 text-blue-600 hover:underline text-sm focus:outline-none">Run an analysis first</button>
+            </div>
+
+            <div id="explain-content" class="hidden">
+              <div class="h-80 w-full mb-8 relative">
+                <canvas id="shapChart"></canvas>
+              </div>
+              <div>
+                <h4 class="text-md font-semibold text-gray-800 dark:text-white mb-4 border-b dark:border-gray-700 pb-2">Top Drivers</h4>
+                <ul id="driver-list" class="space-y-4"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5. War Room Section -->
+      <section id="war-room" class="section-content">
+        <div class="max-w-5xl mx-auto">
+          <div class="top-bar flex justify-between items-start mb-6">
+            <div>
+              <h2 class="text-xl font-semibold dark:text-white text-gray-800">Loan War Room</h2>
+              <p class="text-sm text-gray-500 dark:text-gray-400 mt-1" id="wr-question-text">Loading...</p>
+            </div>
+            <button id="wr-refresh-btn" class="bg-gray-800 hover:bg-gray-700 text-white px-4 py-2 rounded-lg text-sm transition-colors">Refresh Data</button>
+          </div>
+          
+          <div class="flex items-center text-xs text-gray-500 mb-4 gap-2">
+            <div class="w-2 h-2 rounded-full bg-green-500" id="wr-status-dot"></div>
+            <span id="wr-status-text">Fetching results...</span>
+          </div>
+
+          <div id="wr-root" class="min-h-[400px]">
+            <div class="text-center py-16 text-gray-500">Loading...</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. Ask Agent Section -->
+      <section id="agent" class="section-content">
+        <div class="max-w-3xl mx-auto h-[700px] flex flex-col">
+          <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-xl overflow-hidden flex flex-col border border-gray-100 dark:border-gray-700 h-full">
+            <!-- Header -->
+            <div class="bg-gradient-to-r from-blue-600 to-indigo-700 p-6 text-white shrink-0">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="text-xl font-bold mb-1">Ask About This Loan</h3>
+                  <p class="text-blue-100 text-sm">Ask questions via text or voice about the risk analysis.</p>
+                </div>
+                <div class="bg-white/20 p-3 rounded-full backdrop-blur-sm">
+                  <i class="fa-solid fa-robot text-xl"></i>
+                </div>
+              </div>
+            </div>
+
+            <!-- Suggested Questions -->
+            <div class="px-6 pt-4 pb-3 bg-gray-50 dark:bg-gray-800/50 border-b border-gray-100 dark:border-gray-700 shrink-0">
+              <p class="text-xs font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3">Suggested Questions</p>
+              <div class="flex flex-wrap gap-2" id="suggested-questions">
+                <button class="suggestion-btn px-4 py-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 text-sm rounded-full hover:bg-blue-50 dark:hover:bg-gray-600 transition-colors shadow-sm">
+                  Why was this loan rejected?
+                </button>
+                <button class="suggestion-btn px-4 py-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 text-sm rounded-full hover:bg-blue-50 dark:hover:bg-gray-600 transition-colors shadow-sm">
+                  How can this loan be approved?
+                </button>
+                <button class="suggestion-btn px-4 py-2 bg-white dark:bg-gray-700 border border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-200 text-sm rounded-full hover:bg-blue-50 dark:hover:bg-gray-600 transition-colors shadow-sm">
+                  What are the biggest risk factors?
+                </button>
+              </div>
+            </div>
+
+            <!-- Chat Area -->
+            <div class="p-6 flex-1 overflow-y-auto flex flex-col space-y-4" id="chat-messages">
+              <div class="flex gap-4 max-w-[85%]">
+                <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0 mt-1">
+                  <i class="fa-solid fa-robot text-blue-600 text-sm"></i>
+                </div>
+                <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-2xl rounded-tl-none text-gray-800 dark:text-gray-200 shadow-sm text-sm">
+                  Hello! I'm your LendSynthetix AI assistant. I have access to the applicant's risk score, SHAP explanations, and similar past cases. How can I help you understand this loan decision?
+                </div>
+              </div>
+            </div>
+
+            <!-- Loading Indicator (Hidden) -->
+            <div id="loading-indicator" class="px-6 pb-4 hidden shrink-0">
+              <div class="flex gap-4 max-w-[85%]">
+                <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center flex-shrink-0">
+                  <i class="fa-solid fa-robot text-blue-600 text-sm"></i>
+                </div>
+                <div class="bg-gray-100 dark:bg-gray-700 p-4 rounded-2xl rounded-tl-none typing-indicator shadow-sm">
+                  <span></span><span></span><span></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="p-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 shrink-0">
+              <div id="recording-status" class="hidden flex items-center gap-2 mb-2 px-2 text-red-500 text-sm font-medium animate-pulse">
+                <i class="fa-solid fa-microphone"></i> Recording audio...
+              </div>
+              
+              <div class="flex items-center gap-3">
+                <button id="voice-btn" class="w-12 h-12 rounded-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600 flex items-center justify-center transition-all flex-shrink-0" title="Click to record">
+                  <i class="fa-solid fa-microphone text-lg"></i>
+                </button>
+                
+                <div class="flex-1 relative">
+                  <input type="text" id="text-input" class="w-full bg-gray-100 dark:bg-gray-700 dark:text-white border-transparent focus:bg-white dark:focus:bg-gray-600 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded-full py-3 pl-5 pr-12 transition-all outline-none" placeholder="Type your question here...">
+                  <button id="send-btn" class="absolute right-2 top-1/2 transform -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full text-blue-600 hover:bg-blue-50 dark:hover:bg-gray-600 transition-colors">
+                    <i class="fa-solid fa-paper-plane"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </div>
+  </main>
+
+  <!-- JS Modules loaded dynamically -->
+  <script type="module" src="js/app.js"></script>
+</body>
+</html>
