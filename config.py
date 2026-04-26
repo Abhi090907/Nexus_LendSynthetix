@@ -58,6 +58,26 @@ class Settings(BaseSettings):
         description="Environment label (local, dev, prod, etc.).",
     )
 
+    newsapi_key: Optional[str] = Field(
+        default=None,
+        env="NEWSAPI_KEY",
+        description="NewsAPI.org key for sentiment headline fetching. Free tier is sufficient.",
+    )
+
+    ticker_override: Optional[str] = Field(
+        default=None, 
+        env="TICKER_OVERRIDE",
+        description="Lets user manually set ticker if auto-detection fails"
+    )
+    report_signing_key: Optional[str] = Field(
+        default=None,
+        env="REPORT_SIGNING_KEY",
+        description=(
+            "Secret key for HMAC-SHA256 report signing. "
+            "Generate with: python -c \"import secrets; print(secrets.token_hex(32))\""
+        ),
+    )
+
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"

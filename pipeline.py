@@ -1,6 +1,6 @@
 import logging
 from pathlib import Path
-from typing import Optional
+from typing import List, Optional
 
 from llama_index.core import StorageContext, VectorStoreIndex
 
@@ -13,7 +13,7 @@ from qdrant_store import get_qdrant_client, get_qdrant_vector_store
 logger = logging.getLogger(__name__)
 
 
-def ingest_pdf_pipeline(pdf_path: Path, collection_name: Optional[str] = None) -> None:
+def ingest_pdf_pipeline(pdf_paths: List[Path], collection_name: Optional[str] = None) -> None:
     """
     End-to-end ingestion pipeline:
 
@@ -23,18 +23,30 @@ def ingest_pdf_pipeline(pdf_path: Path, collection_name: Optional[str] = None) -
     4. Upsert nodes into a Qdrant collection via LlamaIndex.
     """
     resolved_collection = get_collection_name(collection_name)
-    logger.info("Starting ingestion for '%s' into collection '%s'", pdf_path, resolved_collection)
+    logger.info("Starting ingestion for %d PDFs into collection '%s'", len(pdf_paths), resolved_collection)
 
-    # 1) Parse the raw PDF into LlamaIndex Documents.
-    documents = parse_pdf_to_documents(pdf_path)
-    logger.info("Parsed %d document(s) from PDF", len(documents))
+    all_nodes = []
+    
+    for index, pdf_path in enumerate(pdf_paths):
+        logger.info("Processing PDF %d/%d: %s", index + 1, len(pdf_paths), pdf_path)
+        # 1) Parse the raw PDF into LlamaIndex Documents.
+        documents = parse_pdf_to_documents(pdf_path)
+        logger.info("Parsed %d document(s) from PDF: %s", len(documents), pdf_path)
 
-    # 2) Chunk into semantically meaningful nodes with rich metadata.
-    nodes = chunk_documents_to_nodes(documents)
-    logger.info("Created %d text nodes after chunking", len(nodes))
+        # 2) Chunk into semantically meaningful nodes with rich metadata.
+        nodes = chunk_documents_to_nodes(documents)
+        logger.info("Created %d text nodes after chunking for %s", len(nodes), pdf_path)
+        
+        for node in nodes:
+            if node.metadata is None:
+                node.metadata = {}
+            node.metadata["source_file"] = pdf_path.name
+            node.metadata["doc_index"] = index
+            
+        all_nodes.extend(nodes)
 
-    if not nodes:
-        logger.warning("No nodes were created from the PDF; skipping ingestion.")
+    if not all_nodes:
+        logger.warning("No nodes were created from the PDFs; skipping ingestion.")
         return
 
     # 3) Prepare embedding model and Qdrant vector store.
@@ -49,7 +61,7 @@ def ingest_pdf_pipeline(pdf_path: Path, collection_name: Optional[str] = None) -
 
     # Trigger embedding + storage. LlamaIndex handles batching under the hood.
     index = VectorStoreIndex(
-        nodes,
+        all_nodes,
         storage_context=storage_context,
         embed_model=embed_model,
         show_progress=True,
@@ -57,8 +69,8 @@ def ingest_pdf_pipeline(pdf_path: Path, collection_name: Optional[str] = None) -
 
     # Keeping the index object around (or persisting it) will make querying easier later.
     logger.info(
-        "Finished ingesting %d nodes into Qdrant collection '%s'.",
-        len(nodes),
+        "Finished ingesting %d total nodes into Qdrant collection '%s'.",
+        len(all_nodes),
         resolved_collection,
     )
 
@@ -97,17 +109,22 @@ if inngest is not None:
         }
         """
         data = event.data or {}
-        pdf_path_str = data.get("pdf_path")
+        # Changed to handle lists depending on how inngest event passes them.
+        # Fallback to single if pdf_path is sent instead of pdf_paths
+        pdf_paths_str = data.get("pdf_paths")
+        if not pdf_paths_str and data.get("pdf_path"):
+            pdf_paths_str = [data.get("pdf_path")]
+            
         collection_override = data.get("collection_name")
 
-        if not pdf_path_str:
-            raise ValueError("Event data must include 'pdf_path'.")
+        if not pdf_paths_str:
+            raise ValueError("Event data must include 'pdf_paths' or 'pdf_path'.")
 
-        pdf_path = Path(pdf_path_str)
-        ingest_pdf_pipeline(pdf_path=pdf_path, collection_name=collection_override)
+        pdf_paths = [Path(p) for p in pdf_paths_str]
+        ingest_pdf_pipeline(pdf_paths=pdf_paths, collection_name=collection_override)
 
         return {
             "status": "ok",
-            "pdf_path": str(pdf_path),
+            "pdf_paths": [str(p) for p in pdf_paths],
             "collection_name": get_collection_name(collection_override),
         }

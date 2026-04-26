@@ -43,6 +43,9 @@ class WarRoomState(TypedDict, total=False):
     context: str
 
     financial_analysis: dict
+    sentiment_memo: dict
+    market_intelligence: dict
+    altman_z: dict
     past_cases: List[dict]
 
     sales_memo: dict
@@ -58,6 +61,7 @@ class WarRoomState(TypedDict, total=False):
     stress_test_results: dict
 
     final_decision: dict
+    report_meta: dict
 
 
 # ------------------------------------------------
@@ -81,8 +85,89 @@ def financial_analysis_node(state: WarRoomState) -> dict:
         question=state["question"],
         context=state["context"],
     )
+    
+    dumped_result = result.model_dump()
 
-    return {"financial_analysis": result.model_dump()}
+    return {
+        "financial_analysis": dumped_result,
+        "altman_z": dumped_result.get("altman_z")
+    }
+
+
+# ------------------------------------------------
+# Sentiment Analysis
+# ------------------------------------------------
+
+def sentiment_node(state: WarRoomState) -> dict:
+    from agents.sentiment_agent import run_sentiment_agent
+    
+    # Prefer the already-parsed financial summary — avoids a second raw parse
+    financial_summary = ""
+    fa = state.get("financial_analysis")
+    if fa:
+        if hasattr(fa, "financial_summary"):
+            financial_summary = fa.financial_summary
+        elif isinstance(fa, dict):
+            financial_summary = fa.get("financial_summary", "")
+    
+    memo = run_sentiment_agent(
+        financial_summary=financial_summary,
+        raw_context=state.get("context", ""),
+    )
+    
+    # Always store as plain dict for JSON serialisation
+    return {"sentiment_memo": memo.dict() if hasattr(memo, "dict") else memo}
+
+
+# ------------------------------------------------
+# Market Intelligence
+# ------------------------------------------------
+
+def market_intelligence_node(state: WarRoomState) -> dict:
+    import logging
+    from market_intelligence import run_market_intelligence
+    from agents.json_llm import invoke_json_llm
+    from agents.sentiment_agent import extract_entity_from_context
+    from config import get_settings
+    
+    logger = logging.getLogger(__name__)
+    settings = get_settings()
+
+    fa = state.get("financial_analysis")
+    
+    financial_summary = ""
+    if fa:
+        if hasattr(fa, "financial_summary"):
+            financial_summary = fa.financial_summary
+        elif isinstance(fa, dict):
+            financial_summary = fa.get("financial_summary", "")
+
+    entity = extract_entity_from_context(financial_summary, state.get("context", ""))
+    company_name = entity.get("company_name", "UNKNOWN")
+    sector = entity.get("industry", "UNKNOWN")
+    ticker = settings.ticker_override or entity.get("ticker", "UNKNOWN")
+    
+    try:
+        report = run_market_intelligence(
+            company_name=company_name,
+            sector=sector,
+            context=state.get("context", ""),
+            ticker=ticker if ticker != "UNKNOWN" else None,
+            llm_caller=invoke_json_llm
+        )
+        res_dict = report.model_dump() if hasattr(report, "model_dump") else (report.dict() if hasattr(report, "dict") else report)
+        print("Market Intelligence Generated:", res_dict)
+    except Exception as e:
+        logger.warning(f"market_intelligence_node failed: {e}")
+        res_dict = {
+            "market_intelligence_summary": "Market intelligence unavailable",
+            "investment_signals": {},
+            "geopolitical_risk": {},
+            "macro_context": {}
+        }
+        print("Market Intelligence Generated:", res_dict)
+        
+    return {"market_intelligence": res_dict}
 
 
 # ------------------------------------------------
@@ -111,6 +196,8 @@ def sales_node(state: WarRoomState) -> dict:
         previous_arguments="",
         financial_analysis=state.get("financial_analysis"),
         past_cases=state.get("past_cases"),
+        sentiment_memo=_format_memo(state.get("sentiment_memo")),
+        market_intelligence=state.get("market_intelligence"),
     )
 
     return {
@@ -131,6 +218,8 @@ def risk_node(state: WarRoomState) -> dict:
         previous_arguments=_format_memo(state.get("sales_memo")),
         financial_analysis=state.get("financial_analysis"),
         past_cases=state.get("past_cases"),
+        sentiment_memo=_format_memo(state.get("sentiment_memo")),
+        market_intelligence=state.get("market_intelligence"),
     )
 
     return {"risk_memo": memo.model_dump()}
@@ -224,16 +313,22 @@ def moderator_node(state: WarRoomState) -> dict:
     past_cases = state.get("past_cases") or []
     past_cases_text = "\n".join(str(c) for c in past_cases) if past_cases else ""
 
+    # Ensure altman_z is visible to the moderator
+    fa_dict = state.get("financial_analysis") or {}
+    if state.get("altman_z") and "altman_z" not in fa_dict:
+        fa_dict["altman_z"] = state.get("altman_z")
+
     decision = run_moderator(
         question=state["question"],
         context=state["context"],
         sales_memo_text=_format_memo(state.get("sales_memo")),
         risk_memo_text=_format_memo(state.get("risk_memo")),
         compliance_memo_text=_format_memo(state.get("compliance_memo")),
-        financial_analysis=state.get("financial_analysis"),
+        financial_analysis=fa_dict,
         sales_rebuttal_text=_format_memo(state.get("sales_rebuttal")),
         past_cases=past_cases_text,   # ← converted to string
-        # removed: risk_score and stress_tests (not in signature)
+        market_intelligence=state.get("market_intelligence"),
+        risk_score=state.get("risk_score"),
     )
 
     return {
@@ -243,6 +338,33 @@ def moderator_node(state: WarRoomState) -> dict:
             "conditions": decision.conditions or [],
         }
     }
+
+
+# ------------------------------------------------
+# Tamper-Evident Report Generation
+# ------------------------------------------------
+
+def report_node(state: WarRoomState) -> dict:
+    from report_generator import generate_report_pdf
+    from audit_ledger import init_ledger, record_case
+
+    init_ledger()
+    report_meta = generate_report_pdf(dict(state))
+
+    financial_analysis = state.get("financial_analysis") or {}
+    if isinstance(financial_analysis, dict):
+        report_meta["borrower_name"] = financial_analysis.get("company_name", "N/A")
+    else:
+        report_meta["borrower_name"] = "N/A"
+
+    risk_score = state.get("risk_score") or {}
+    report_meta["risk_score"] = (
+        risk_score.get("risk_score", None) if isinstance(risk_score, dict) else None
+    )
+
+    record_case("audit_ledger.db", report_meta)
+
+    return {"report_meta": report_meta}
 
 
 # ------------------------------------------------
@@ -306,6 +428,8 @@ def build_war_room_graph():
 
     builder.add_node("retrieve_context", retrieve_context)
     builder.add_node("financial_analysis_node", financial_analysis_node)
+    builder.add_node("sentiment_node", sentiment_node)
+    builder.add_node("market_intelligence_node", market_intelligence_node)
     builder.add_node("case_memory_node", case_memory_node)
 
     builder.add_node("sales_node", sales_node)
@@ -318,12 +442,15 @@ def build_war_room_graph():
     builder.add_node("stress_testing_node", stress_testing_node)
 
     builder.add_node("moderator_node", moderator_node)
+    builder.add_node("report_node", report_node)
     builder.add_node("store_case_node", store_case_node)
 
     builder.set_entry_point("retrieve_context")
 
     builder.add_edge("retrieve_context", "financial_analysis_node")
-    builder.add_edge("financial_analysis_node", "case_memory_node")
+    builder.add_edge("financial_analysis_node", "market_intelligence_node")
+    builder.add_edge("market_intelligence_node", "sentiment_node")
+    builder.add_edge("sentiment_node", "case_memory_node")
 
     builder.add_edge("case_memory_node", "sales_node")
     builder.add_edge("sales_node", "risk_node")
@@ -343,7 +470,8 @@ def build_war_room_graph():
         },
     )
 
-    builder.add_edge("moderator_node", "store_case_node")
+    builder.add_edge("moderator_node", "report_node")
+    builder.add_edge("report_node", "store_case_node")
 
     builder.add_edge("store_case_node", END)
 

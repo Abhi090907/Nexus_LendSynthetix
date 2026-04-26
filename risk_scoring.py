@@ -232,10 +232,38 @@ def calculate_risk_score(
     grade_label = GRADE_LABELS[predicted_grade]
 
     drivers.append(f"ML model predicted loan grade: {grade_label}")
+    
+    # ── SHAP Explainability ──
+    import shap
+    import numpy as np
+    
+    explainer = shap.TreeExplainer(_MODEL)
+    shap_values = explainer.shap_values(features)
+    
+    if isinstance(shap_values, list):
+        sv = shap_values[predicted_grade][0]
+    elif len(np.shape(shap_values)) == 3:
+        sv = shap_values[0, :, predicted_grade] if np.shape(shap_values)[2] >= len(GRADE_LABELS) else shap_values[predicted_grade][0]
+    else:
+        sv = shap_values[0]
+        
+    impacts = []
+    for i, col in enumerate(FEATURE_COLUMNS):
+        impacts.append((col, float(sv[i])))
+        
+    impacts.sort(key=lambda x: abs(x[1]), reverse=True)
+    
+    shap_explanation = []
+    for col, val in impacts[:3]:
+        shap_explanation.append({
+            "feature": col,
+            "impact": round(val, 2),
+            "direction": "INCREASES_RISK" if val > 0 else "REDUCES_RISK"
+        })
 
-    metrics.setdefault("dscr", GRADE_DSCR[predicted_grade])
-    metrics.setdefault("revenue_growth", GRADE_REV_GROWTH[predicted_grade])
-    metrics.setdefault("debt_trend", GRADE_DEBT_TREND[predicted_grade])
+    metrics.setdefault("dscr", GRADE_DSCR.get(predicted_grade, "1.80"))
+    metrics.setdefault("revenue_growth", GRADE_REV_GROWTH.get(predicted_grade, "20%"))
+    metrics.setdefault("debt_trend", GRADE_DEBT_TREND.get(predicted_grade, "stable"))
 
     blocking = (compliance_memo or {}).get("blocking_issues") or []
 
@@ -289,7 +317,8 @@ def calculate_risk_score(
         "risk_score": score,
         "risk_level": risk_level,
         "predicted_grade": grade_label,
-        "key_drivers": drivers
+        "key_drivers": drivers,
+        "shap_explanation": shap_explanation
     }
 
 

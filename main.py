@@ -11,9 +11,10 @@ def parse_args() -> argparse.Namespace:
     )
     parser.add_argument(
         "--pdf",
+        action="append",
         required=True,
         type=str,
-        help="Path to the PDF to ingest (e.g., ./data/loan_grade_a_vertex_technologies.pdf).",
+        help="Path to the PDF to ingest. Can be specified multiple times for multiple PDFs.",
     )
     parser.add_argument(
         "--collection",
@@ -30,12 +31,15 @@ def main() -> None:
         format="%(asctime)s | %(levelname)s | %(name)s | %(message)s",
     )
     args = parse_args()
-    pdf_path = Path(args.pdf)
+    
+    pdf_paths = []
+    for p in args.pdf:
+        pdf_path = Path(p)
+        if not pdf_path.exists():
+            raise FileNotFoundError(f"PDF not found at: {pdf_path}")
+        pdf_paths.append(pdf_path)
 
-    if not pdf_path.exists():
-        raise FileNotFoundError(f"PDF not found at: {pdf_path}")
-
-    ingest_pdf_pipeline(pdf_path=pdf_path, collection_name=args.collection)
+    ingest_pdf_pipeline(pdf_paths=pdf_paths, collection_name=args.collection)
 
 
 if __name__ == "__main__":

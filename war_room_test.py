@@ -195,13 +195,14 @@ def main() -> None:
         "risk_memo":          result.get("risk_memo")          or {},
         "sales_rebuttal":     result.get("sales_rebuttal")     or {},
         "compliance_memo":    result.get("compliance_memo")    or {},
+        "market_intelligence": result.get("market_intelligence") or {},
         "risk_score":         result.get("risk_score")         or {},
         "stress_test_results":result.get("stress_test_results")or {},
         "final_decision":     result.get("final_decision")     or {},
     }
 
     # Save next to the HTML file so the browser can fetch it
-    out_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "war_room_output.json")
+    out_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "public", "dashboard", "war_room_output.json")
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(output, f, indent=2, default=str)
 

@@ -14,17 +14,17 @@ logger = logging.getLogger(__name__)
 # Local path used by both ingestion pipeline and query engine so they share the same DB.
 QDRANT_LOCAL_PATH = "./qdrant_db"
 
+_client_instance = None
 
 def get_qdrant_client() -> QdrantClient:
     """
     Create a QdrantClient using local file storage.
-
-    Both the ingestion pipeline and the query engine use this same client
-    configuration, so they connect to the same collection (e.g. "loan_documents")
-    at the same path (QDRANT_LOCAL_PATH).
+    Uses a singleton instance to prevent DB lock errors in FastAPI.
     """
-    client = QdrantClient(path=QDRANT_LOCAL_PATH)
-    return client
+    global _client_instance
+    if _client_instance is None:
+        _client_instance = QdrantClient(location=":memory:")
+    return _client_instance
 
 
 def ensure_collection(

@@ -61,6 +61,8 @@ def run_sales_agent(
     previous_arguments: str = "",
     financial_analysis: str = "",
     past_cases: Union[str, List[str]] = "",
+    sentiment_memo: str = "",
+    market_intelligence: dict = None,
 ) -> SalesMemo:
     """
     Produce a Relationship Manager approval memo from the loan context.
@@ -107,6 +109,28 @@ SIMILAR PAST CASES:
 
 FINANCIAL ANALYSIS (use for evidence and reasoning):
 {financial_analysis}
+"""
+
+    if sentiment_memo.strip():
+        prompt += f"""
+MARKET SENTIMENT INTELLIGENCE:
+{sentiment_memo}
+
+If sentiment is POSITIVE: use headline insights to strengthen your approval case.
+If sentiment is NEGATIVE: acknowledge the reputational signal but argue why the 
+financial fundamentals still support approval.
+If sentiment is NEUTRAL or unavailable: omit sentiment from your argument.
+"""
+
+    if market_intelligence and isinstance(market_intelligence, dict):
+        summary = market_intelligence.get("market_intelligence_summary", "")
+        verdict = market_intelligence.get("investment_signals", {}).get("investment_verdict", "")
+        if summary:
+            prompt += f"""
+MARKET INTELLIGENCE:
+{summary}
+Investment verdict: {verdict}
+Use this to strengthen your approval argument if signals are positive, or acknowledge risks if signals are mixed.
 """
 
     if isinstance(previous_arguments, str) and previous_arguments.strip():

@@ -19,7 +19,9 @@ def _format_nodes_as_context(nodes) -> str:
         meta = node.metadata or {}
         page = meta.get("page_number", "?")
         section = meta.get("section_hint", "").strip()
-        header = f"[page {page}]"
+        source_file = meta.get("source_file", "Unknown")
+        
+        header = f"[Source: {source_file}] [page {page}]"
         if section:
             header = f"{header} {section}"
 

@@ -66,6 +66,8 @@ def run_risk_agent(
     previous_arguments: str = "",
     financial_analysis: str = "",
     past_cases="",
+    sentiment_memo: str = "",
+    market_intelligence: dict = None,
 ) -> RiskMemo:
     """
     Produce a Credit Underwriter risk memo from the loan context.
@@ -126,6 +128,34 @@ SIMILAR PAST CASES:
 
 FINANCIAL ANALYSIS (use for evidence and reasoning):
 {financial_analysis}
+"""
+
+    if sentiment_memo.strip():
+        prompt += f"""
+MARKET SENTIMENT INTELLIGENCE:
+{sentiment_memo}
+
+If sentiment is NEGATIVE: flag reputational risk explicitly in your 
+"other_risks" list — cite the risk_signal verbatim.
+If sentiment is POSITIVE: note it briefly but do not let it override 
+quantitative risk flags.
+If sentiment is NEUTRAL or unavailable: omit from your memo.
+"""
+
+    if market_intelligence and isinstance(market_intelligence, dict):
+        summary = market_intelligence.get("market_intelligence_summary", "")
+        geo = market_intelligence.get("geopolitical_risk", {}).get("geopolitical_flags", [])
+        macro = market_intelligence.get("macro_context", {}).get("macro_flags", [])
+        score = market_intelligence.get("investment_signals", {}).get("overall_investment_score", 100)
+        geo_score = market_intelligence.get("geopolitical_risk", {}).get("geopolitical_risk_score", 0)
+        
+        if summary:
+            prompt += f"""
+MARKET INTELLIGENCE:
+{summary}
+Geopolitical flags: {geo}
+Macro flags: {macro}
+Elevate risk concerns if investment score < 40 (Current: {score}) or geopolitical_risk_score > 50 (Current: {geo_score}).
 """
 
     # ----------------------------------------------------
